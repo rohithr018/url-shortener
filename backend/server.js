@@ -28,7 +28,7 @@ app.use(cors())
 app.use(express.json())
 
 // API Routes
-app.use("/api/url", urlRoutes)
+app.use("/", urlRoutes)
 
 // Health Check
 app.get("/", (req, res) => {

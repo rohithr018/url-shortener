@@ -3,38 +3,35 @@ import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 export default function Footer() {
     return (
-        <footer className="w-full border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-6 mt-8">
+        <footer className="w-full border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-6">
             <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                {/* Left - Copyright */}
+                
+                {/* Left: Copyright */}
                 <div className="text-sm text-center md:text-left">
                     © {new Date().getFullYear()} <span className="font-semibold">Shortify</span>. All rights reserved.
                 </div>
 
-                {/* Right - Social Links */}
+                {/* Right: Social Icons */}
                 <div className="flex items-center gap-4">
                     <a
-                        href="https://github.com/yourusername"
+                        href="https://github.com/rohithr018"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-black dark:hover:text-white transition"
+                        aria-label="GitHub"
+                        title="GitHub"
+                        className="hover:text-black dark:hover:text-white transition-colors transform hover:scale-110"
                     >
                         <FaGithub size={20} />
                     </a>
                     <a
-                        href="https://linkedin.com/in/yourusername"
+                        href="https://www.linkedin.com/in/rohithr1809/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-blue-700 dark:hover:text-blue-400 transition"
+                        aria-label="LinkedIn"
+                        title="LinkedIn"
+                        className="hover:text-blue-700 dark:hover:text-blue-400 transition-colors transform hover:scale-110"
                     >
                         <FaLinkedin size={20} />
-                    </a>
-                    <a
-                        href="https://twitter.com/yourusername"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-blue-500 dark:hover:text-blue-300 transition"
-                    >
-                        <FaTwitter size={20} />
                     </a>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+const Counter = require("./models/counter.model")
+
 // Base62 character set
 const BASE62_CHARSET =
 	"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -20,10 +22,25 @@ function generateShortCode(counterValue) {
 	return base62.padStart(6, "0")
 }
 
+async function initializeCounter(counterName = "url_count", startValue = 1000000000) {
+  try {
+    const existing = await Counter.findOne({ name: counterName })
+    if (!existing) {
+      await Counter.create({ name: counterName, sequenceValue: startValue })
+      console.log(`[SUCCESS]:Counter "${counterName}" initialized at ${startValue}`)
+    } else {
+      console.log(`[INFO]:Counter "${counterName}" already exists with value ${existing.sequenceValue}`)
+    }
+  } catch (err) {
+    console.error("[ERROR]:Failed to initialize counter:", err)
+  }
+}
+
 
 
 // Export all utilities
 module.exports = {
 	encodeBase62,
 	generateShortCode,
+	initializeCounter
 }

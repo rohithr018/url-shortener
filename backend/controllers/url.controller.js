@@ -118,7 +118,12 @@ exports.redirectToOriginalUrl = async (req, res, next) => {
 
 		await urlDoc.save()
 
-		return res.redirect(originalUrl)
+		if (req.headers.accept?.includes('application/json')) {
+  			return res.status(200).json({ location: originalUrl });
+		}
+
+		return res.redirect(originalUrl);
+
 	} catch (error) {
 		next(error)
 	}
