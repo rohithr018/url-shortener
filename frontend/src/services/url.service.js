@@ -10,3 +10,11 @@ export const getGlobalAnalytics = async () => {
   return res.data
 }
 
+export const resolveShortUrl = async (shortcode) => {
+  const res = await api.get(`/${shortcode}`, {
+    headers: {
+      Accept: "application/json"
+    }
+  })
+  return res.data.location  // original URL
+}

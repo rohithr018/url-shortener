@@ -5,8 +5,10 @@ const { generateShortCode } = require("../utils")
 const geoip = require("geoip-lite")
 
 const CACHE_TTL_SECONDS = 2 * 24 * 60 * 60 // 2 days
+const NODE_ENV = process.env.NODE_ENV
+const PORT = process.env.PORT
+const ORIGINAL_URL = NODE_ENV==="PROD"? process.env.ORIGINAL_URL : "http://localhost:5173"
 
-//create a new short URL
 exports.createShortUrl = async (req, res, next) => {
 	try {
 		const { originalUrl, customAlias } = req.body
@@ -19,7 +21,7 @@ exports.createShortUrl = async (req, res, next) => {
 		if (cachedShortCode && !customAlias) {
 			return res.status(200).json({
 				originalUrl,
-				shortUrl: `${process.env.BASE_URL}/${cachedShortCode}`,
+				shortUrl: `${ORIGINAL_URL}/${cachedShortCode}`,
 				shortCode: cachedShortCode,
 			})
 		}
@@ -48,7 +50,7 @@ exports.createShortUrl = async (req, res, next) => {
 
 				return res.status(200).json({
 					originalUrl,
-					shortUrl: `${process.env.BASE_URL}/${existingDoc.shortCode}`,
+					shortUrl: `${ORIGINAL_URL}/${existingDoc.shortCode}`,
 					shortCode: existingDoc.shortCode,
 				})
 			}
@@ -70,7 +72,7 @@ exports.createShortUrl = async (req, res, next) => {
 
 		res.status(201).json({
 			originalUrl,
-			shortUrl: `${process.env.BASE_URL}/${shortCode}`,
+			shortUrl: `${ORIGINAL_URL}/${shortCode}`,
 			shortCode,
 		})
 	} catch (error) {

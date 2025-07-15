@@ -1,67 +1,119 @@
-import React from 'react';
-import { FaArrowUp } from 'react-icons/fa';
+import React, { useEffect, useState, useRef } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const features = [
-    {
-        id: 'custom-alias',
-        title: 'Custom Alias',
-        description: 'Create personalized short URLs like sho.rt/my-brand.',
-        image: 'https://via.placeholder.com/400x300?text=Custom+Alias',
-    },
-    {
-        id: 'analytics',
-        title: 'Link Analytics',
-        description: 'Track clicks, locations, and referrals for each link.',
-        image: 'https://via.placeholder.com/400x300?text=Analytics',
-    },
-    {
-        id: 'dark-mode',
-        title: 'Dark Mode',
-        description: 'Seamless theme toggling for a comfortable experience.',
-        image: 'https://via.placeholder.com/400x300?text=Dark+Mode',
-    },
-    {
-        id: 'secure',
-        title: 'Secure Redirects',
-        description: 'Short links are safe and go through verification.',
-        image: 'https://via.placeholder.com/400x300?text=Secure+Redirects',
-    },
+	{
+		title: "Custom Alias",
+		description:
+			"Create personalized short URLs like sh-rtly/my-brand for easy sharing and branding.",
+	},
+	{
+		title: "Dark Mode",
+		description:
+			"Switch between light and dark themes for a better and more comfortable user experience.",
+	},
+	{
+		title: "Secure Redirects",
+		description:
+			"All redirects are verified and encrypted to protect users from malicious links.",
+	},
+	{
+		title: "Blazing Fast Performance",
+		description:
+			"Optimized infrastructure with caching ensures instant redirection and response.",
+	},
+	{
+		title: "User-Friendly Interface",
+		description:
+			"Simple, intuitive design that makes creating links effortless.",
+	},
+	{
+		title: "Link Expiration",
+		description: "Auto expires link/short-codes after some time",
+	},
+	{
+		title: "Caching for Fast Redirects",
+		description:
+			"Integrated smart caching systems reduce latency and improve response times globally.",
+	},
 ];
 
-export default function Features({ scrollTo, sectionIds }) {
-    return (
-        <>
-            {features.map((feature, index) => {
-                const isLast = index + 2 === sectionIds.length;
+export default function Features() {
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const intervalRef = useRef(null);
 
-                return (
-                    <section
-                        key={feature.id}
-                        id={feature.id}
-                        className="snap-start h-screen flex items-center justify-center px-6 py-12 bg-white dark:bg-gray-950 text-black dark:text-white relative"
-                    >
-                        <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center">
-                            <img src={feature.image} alt={feature.title} className="rounded-xl shadow-lg" />
-                            <div>
-                                <h2 className="text-4xl font-bold mb-4">{feature.title}</h2>
-                                <p className="text-lg text-gray-700 dark:text-gray-300">{feature.description}</p>
-                            </div>
-                        </div>
+	const goToSlide = (index) => {
+		setCurrentIndex((index + features.length) % features.length);
+	};
 
-                        {isLast && (
-                            <button
-                                onClick={() => scrollTo('form')}
-                                className="absolute bottom-6 text-blue-600 dark:text-blue-400 animate-bounce"
-                                aria-label="Scroll to top"
-                            >
-                                {/* <FaArrowUp size={24} /> */}
-                                <span>scroll to top</span>
-                            </button>
-                        )}
+	const nextSlide = () => goToSlide(currentIndex + 1);
+	const prevSlide = () => goToSlide(currentIndex - 1);
 
-                    </section>
-                );
-            })}
-        </>
-    );
+	const startAutoSlide = () => {
+		intervalRef.current = setInterval(() => {
+			setCurrentIndex((prev) => (prev + 1) % features.length);
+		}, 4000);
+	};
+
+	const stopAutoSlide = () => {
+		if (intervalRef.current) clearInterval(intervalRef.current);
+	};
+
+	useEffect(() => {
+		startAutoSlide();
+		return () => stopAutoSlide();
+	}, []);
+
+	return (
+		<div
+			onMouseEnter={stopAutoSlide}
+			onMouseLeave={startAutoSlide}
+			className="w-full bg-blue-100 dark:bg-gray-950 py-3 px-4 sm:px-6 text-center shadow-inner relative flex flex-col items-center overflow-hidden"
+		>
+			{/* Navigation Buttons */}
+			<button
+				onClick={prevSlide}
+				aria-label="Previous Feature"
+				className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 text-blue-800 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-100 transition-all"
+			>
+				<FaChevronLeft className="text-lg sm:text-xl" />
+			</button>
+
+			{/* Slide Text */}
+			<div className="mx-10 sm:mx-20 transition-all duration-500 ease-in-out">
+				<p className="text-sm sm:text-base text-blue-900 dark:text-blue-200 font-medium">
+					<span className="font-semibold">{features[currentIndex].title}:</span>{" "}
+					{features[currentIndex].description}
+				</p>
+			</div>
+
+			{/* Navigation Buttons */}
+			<button
+				onClick={nextSlide}
+				aria-label="Next Feature"
+				className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-blue-800 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-100 transition-all"
+			>
+				<FaChevronRight className="text-lg sm:text-xl" />
+			</button>
+
+			{/* Dots */}
+			<div className="mt-3 flex gap-2">
+				{features.map((_, i) => (
+					<button
+						key={i}
+						onClick={() => goToSlide(i)}
+						className={`w-3 h-3 rounded-full transition-all border-2 ${
+							i === currentIndex
+								? "bg-blue-600 dark:bg-blue-300 border-blue-600 dark:border-blue-300"
+								: "bg-transparent border-blue-400 dark:border-blue-600"
+						}`}
+						aria-label={`Go to slide ${i + 1}`}
+					/>
+				))}
+			</div>
+
+			{/* Divider */}
+			<hr className="w-full border-t border-gray-300 dark:border-gray-700 mt-4" />
+		</div>
+	);
 }
