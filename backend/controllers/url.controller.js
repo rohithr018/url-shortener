@@ -65,8 +65,14 @@ exports.createShortUrl = async (req, res, next) => {
 			shortCode = generateShortCode(ID)
 		}
 
-		const newUrl = await Url.create({ originalUrl, shortCode, customAlias, ID })
+		const urlPayload = { originalUrl, shortCode };
+		if (customAlias) {
+			urlPayload.customAlias = customAlias;
+		} else {
+			urlPayload.ID = ID;
+		}
 
+const newUrl = await Url.create(urlPayload);
 		await redisClient.set(shortCode, originalUrl, 'EX', CACHE_TTL_SECONDS)
 		await redisClient.set(`original:${originalUrl}`, shortCode, 'EX', CACHE_TTL_SECONDS)
 

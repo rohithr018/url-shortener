@@ -16,7 +16,6 @@ const urlSchema = new mongoose.Schema({
 		required: function () {
 			return !this.customAlias
 		},
-		unique: true,
 		index: true,
 	},
 
