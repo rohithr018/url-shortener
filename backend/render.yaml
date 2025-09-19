@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: url-shortener
+    env: node
+    plan: free
+    buildCommand: "npm install"
+    startCommand: "node server.js"
+    envVars:
+      - key: REDIS_URL
+        value: "redis://:localpass@redis:6379"
+
+  - type: worker
+    name: redis
+    env: docker
+    plan: free
+    dockerfilePath: ""
+    image: redis:7-alpine
+    startCommand: "redis-server --requirepass localpass"
