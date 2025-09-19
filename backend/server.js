@@ -22,12 +22,12 @@ connectDB()
 
 // Connect to Valkey (Redis-compatible)
 redisClient.on("connect", () => {
-	console.log("[SUCCESS]:Connected to Valkey (Redis)")
-	REDIS_STATUS =  "connected"
+	console.log("[SUCCESS]: Connected to Redis")
+	REDIS_STATUS = "connected"
 })
 redisClient.on("error", (err) => {
-	console.error("[ERROR]:Valkey connection error:", err)
-	REDIS_STATUS =  "disconnected"
+	console.error("[ERROR]: Redis connection error:", err)
+	REDIS_STATUS = "disconnected"
 })
 
 // Middleware

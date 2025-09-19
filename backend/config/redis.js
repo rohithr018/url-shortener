@@ -1,13 +1,32 @@
-const Redis = require("ioredis")
-const dotenv = require("dotenv")
+// config/redis.js
+const Redis = require("ioredis");
+const { execSync } = require("child_process");
 
-dotenv.config()
+function runCommand(cmd) {
+  try {
+    return execSync(cmd, { stdio: "pipe" }).toString().trim();
+  } catch (err) {
+    return null;
+  }
+}
 
-// Redis client for Valkey with TLS support
-const redisClient = new Redis(process.env.REDIS_URL, {
-	tls: {
-		rejectUnauthorized: false,
-	},
-})
+function setupLocalRedis() {
+  const container = runCommand("docker ps --filter name=redis-local --format '{{.Names}}'");
 
-module.exports = redisClient
+  if (container === "redis-local") {
+    console.log("✅ Local Redis already running");
+    return "redis://:localpass@localhost:6379";
+  }
+
+  console.log("🚀 Starting local Redis container...");
+  runCommand(
+    `docker run -d --name redis-local -p 6379:6379 redis:7-alpine redis-server --requirepass localpass`
+  );
+
+  return "redis://:localpass@localhost:6379";
+}
+
+const redisUrl = process.env.REDIS_URL || setupLocalRedis();
+const redisClient = new Redis(redisUrl);
+
+module.exports = redisClient;
