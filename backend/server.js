@@ -62,5 +62,5 @@ app.use(errorHandler)
 // Start Server
 app.listen(PORT, () => {
 	console.log(`[ENV]:${ENV}`);
-	console.log(`[INFO]:Server running on ${BASE_URL}`)
+	console.log(`[INFO]:Server running on PORT:${PORT}`)
 })
