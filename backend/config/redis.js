@@ -37,16 +37,7 @@ if (process.env.NODE_ENV === "PROD") {
   redisUrl = setupLocalRedis();
 }
 
-console.log(`[INFO]: Using Redis URL -> ${redisUrl}`);
 
 const redisClient = new Redis(redisUrl);
-
-redisClient.on("connect", () => {
-  console.log("[SUCCESS]: Redis connected");
-});
-
-redisClient.on("error", (err) => {
-  console.error("[ERROR]: Redis connection error:", err);
-});
 
 module.exports = redisClient;
