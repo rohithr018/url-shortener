@@ -54,15 +54,18 @@ exports.createShortUrl = async (req, res, next) => {
 					shortCode: existingDoc.shortCode,
 				})
 			}
-
-			const counter = await Counter.findOneAndUpdate(
+			//get from pool 
+			shortCode = await redisClient.lpop("shortcode_pool")
+			if (!shortCode) {
+				// If pool empty → generate new code
+				const counter = await Counter.findOneAndUpdate(
 				{ name: "url_count" },
 				{ $inc: { sequenceValue: 1 } },
 				{ new: true, upsert: true }
-			)
-
-			ID = counter.sequenceValue
-			shortCode = generateShortCode(ID)
+				)
+				ID = counter.sequenceValue
+				shortCode = generateShortCode(ID)
+			}
 		}
 
 		const urlPayload = { originalUrl, shortCode };
@@ -72,7 +75,7 @@ exports.createShortUrl = async (req, res, next) => {
 			urlPayload.ID = ID;
 		}
 
-const newUrl = await Url.create(urlPayload);
+		const newUrl = await Url.create(urlPayload);
 		await redisClient.set(shortCode, originalUrl, 'EX', CACHE_TTL_SECONDS)
 		await redisClient.set(`original:${originalUrl}`, shortCode, 'EX', CACHE_TTL_SECONDS)
 
